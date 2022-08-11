@@ -16,17 +16,14 @@ class SortingAlgorithms:
     def radixSort(inputArray):
         maxEl = max(inputArray)
 
-        D = len(str(maxEl))
-        
-        # Step 3 -> Initialize the place value to the least significant place
+        maximumDigit = len(str(maxEl))
         placeVal = 1
 
-        # Step 4
         outputArray = inputArray
-        while D > 0:
+        while maximumDigit > 0:
             outputArray = SortingAlgorithms.__countingSortForRadix(outputArray, placeVal)
             placeVal *= 10  
-            D -= 1
+            maximumDigit -= 1
 
         return outputArray
 
