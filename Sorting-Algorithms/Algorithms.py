@@ -158,7 +158,6 @@ class SortingAlgorithms:
 
         for i in range(1, 10):
             countArray[i] += countArray[i-1]
-            
         outputArray = [0] * inputSize
         i = inputSize - 1
         while i >= 0:
