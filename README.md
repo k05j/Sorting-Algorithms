@@ -7,3 +7,4 @@ So far the following algorithms have been implemented:
 * Quicksort
 * Bubblesort
 * Selection-Sort
+* Merge-Sort
