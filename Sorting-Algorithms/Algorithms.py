@@ -1,4 +1,5 @@
-import time
+from cmath import log
+import time, random
 
 class SortingAlgorithms:
     @staticmethod
@@ -12,17 +13,22 @@ class SortingAlgorithms:
             return SortingAlgorithms.quicksort(less) + [pivot] + SortingAlgorithms.quicksort(greater)
 
     @staticmethod
-    def radixsort(array):
-        queues = [[] for i in range(10)]
-        maximum = max(array)
-        for i in range(len(str(maximum))):
-            for j in array:
-                queues[int(j / (10 ** i) % 10)].append(j)
-            array = []
-            for q in queues:
-                while len(q) > 0:
-                    array.append(q.pop(0))
-        return array
+    def radixSort(inputArray):
+        maxEl = max(inputArray)
+
+        D = len(str(maxEl))
+        
+        # Step 3 -> Initialize the place value to the least significant place
+        placeVal = 1
+
+        # Step 4
+        outputArray = inputArray
+        while D > 0:
+            outputArray = SortingAlgorithms.__countingSortForRadix(outputArray, placeVal)
+            placeVal *= 10  
+            D -= 1
+
+        return outputArray
 
     @staticmethod
     def bubbleSort(array):
@@ -72,10 +78,99 @@ class SortingAlgorithms:
                 array[k] = right_side[j]
                 j += 1
                 k += 1
+
+        return array
+    
+    @staticmethod
+    def insertionSort(array):
+        for i in range(1, len(array)):
+            j = i
+            while j > 0 and array[j] < array[j - 1]:
+                array[j], array[j - 1] = array[j - 1], array[j]
+                j -= 1
         return array
 
+    @staticmethod
+    def shellSort(array):
+        gap = len(array) // 2
+        while gap > 0:
+            for i in range(gap, len(array)):
+                j = i
+                while j >= gap and array[j] < array[j - gap]:
+                    array[j], array[j - gap] = array[j - gap], array[j]
+                    j -= gap
+            gap = gap // 2
+        return array
+
+    @staticmethod
+    def randomQuickSort(array):
+        if len(array) < 2:
+            return array
+        else:
+            pivot = array[random.randint(0, len(array) - 1)]
+            less = [i for i in array[1:] if i <= pivot]
+            greater = [i for i in array[1:] if i > pivot]
+            return SortingAlgorithms.randomQuickSort(less) + [pivot] + SortingAlgorithms.randomQuickSort(greater)
+
+    @staticmethod
+    def countingSort(array):
+        # Find the maximum element in the inputArray
+        maxEl = max(array)
+
+        countArrayLength = maxEl+1
+
+        # Initialize the countArray with (max+1) zeros
+        countArray = [0] * countArrayLength
+
+        # Step 1 -> Traverse the inputArray and increase 
+        # the corresponding count for every element by 1
+        for el in array: 
+            countArray[el] += 1
+
+        # Step 2 -> For each element in the countArray, 
+        # sum up its value with the value of the previous 
+        # element, and then store that value 
+        # as the value of the current element
+        for i in range(1, countArrayLength):
+            countArray[i] += countArray[i-1] 
+
+        # Step 3 -> Calculate element position
+        # based on the countArray values
+        outputArray = [0] * len(array)
+        i = len(array) - 1
+        while i >= 0:
+            currentEl = array[i]
+            countArray[currentEl] -= 1
+            newPosition = countArray[currentEl]
+            outputArray[newPosition] = currentEl
+            i -= 1
+
+        return outputArray
+
+    @staticmethod
+    def __countingSortForRadix(inputArray, placeValue):
+        countArray = [0 for i in range(10)]
+        inputSize = len(inputArray)
+
+        for i in range(inputSize): 
+            placeElement = (inputArray[i] // placeValue) % 10
+            countArray[placeElement] += 1
+
+        for i in range(1, 10):
+            countArray[i] += countArray[i-1]
+            
+        outputArray = [0] * inputSize
+        i = inputSize - 1
+        while i >= 0:
+            currentEl = inputArray[i]
+            placeElement = (inputArray[i] // placeValue) % 10
+            countArray[placeElement] -= 1
+            newPosition = countArray[placeElement]
+            outputArray[newPosition] = currentEl
+            i -= 1
+            
+        return outputArray
         
     @staticmethod
     def returnRandomArray(size):
-        import random
-        return [random.randint(0, size) for i in range(size)]
+        return [random.randint(0, size ^ 2) for i in range(size)]
