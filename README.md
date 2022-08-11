@@ -1,5 +1,5 @@
 # Sorting-Algorithms
-Different sorting algorithms, implemented in python
+Different sorting algorithms, implemented in python with time tracking
 
 So far the following algorithms have been implemented:
 
